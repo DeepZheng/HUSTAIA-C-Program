@@ -1,18 +1,20 @@
-#ifndef _mouse_h_
-#define _mouse_h_
-int mouse_press(int x1, int y1, int x2, int y2);//如果在框中点击，则返回1；在框中未点击，则返回2；不在框中则返回0
-void mouse(int,int);//设计鼠标
-void mouseinit(void);//初始化
-//void mou_pos(int*,int*,int*);//更改鼠标位置
-void mread(int *,int *,int*);//改坐标不画
-void save_bk_mou(int x,int y);//存鼠标背景
-void clrmous(int x,int y);//清除鼠标
-void drawmous(int x,int y);//画鼠标
-void newmouse(int *nx,int *ny,int *nbuttons);   //更新鼠标
+#ifndef _MOUSE_H_
+#define _MOUSE_H_
+#include"draw.h"
+#include"svgamode.h"
+#include<dos.h>
 
-extern int MouseX;
-extern int MouseY;
-extern int MouseS;
-extern int press;
-extern union REGS regs;
+void Cursor(int x,int y,int color);
+int Initmouse(int xmi,int xma,int ymi,int yma);
+int Readmouse(void);
+void Newxy(void);
+void Mouse_savebk(int x,int y);
+void Mouse_putbk(int x,int y);
+int Mouse_press(int x1,int y1,int x2,int y2);
+int Mouse_pressother(int x1, int y1, int x2, int y2);
+int Mouse_above(int x1,int y1,int x2,int y2);
+int Mouse_aboveother(int x1, int y1, int x2, int y2);
+int Button(void);
+void Mouse_press_getxy(int *x,int *y);
+
 #endif
