@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "MOUSE.C": "cpp",
+        "HZ.C": "cpp",
+        "out_tx.C": "cpp",
+        "SVGA.C": "cpp",
+        "regis.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
