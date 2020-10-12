@@ -24,6 +24,7 @@ int main(){
     books book;
     furnitures furniture;
     recommends recommend;
+    Cart usercart;
 
 	int mark = 1;   //  页码编号
 	int flag = 0;   //  退出
@@ -31,6 +32,7 @@ int main(){
 	SetSVGA64k();
 	Initmouse(1,1023,1,767);
     Initgood(&eat,&electric,&book,&furniture,&recommend);
+    InitCart(&usercart);
 	while(1){
 		switch(mark){
 			case 1:{
@@ -96,11 +98,11 @@ int main(){
                 break;
             }
             case 52:{
-                mark = UserCart(&loginuser);        //购物车
+                mark = UserCart(&loginuser,&usercart);        //购物车
                 break;
             }
             case 53:{
-                mark = UserOrder(&loginuser);       //用户订单
+                mark = UserOrder(&loginuser,&usercart);       //用户订单
                 break;
             }
             case 6:

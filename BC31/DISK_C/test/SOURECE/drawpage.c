@@ -5,26 +5,9 @@
 #include "SVGAmode.h"
 #include "color.h"
 
-void put_good(int x,int y,good g){
-	char *picname = "..\\file\\bmp\\";
-	strcat(picname,g.picpath);
-	//strcpy(good->pic,picname);
-	Barshadow(x,y,x+350,y+120,WHITE,GRAY);
-	Frame(x,y,x+350,y+120,GRAY,2);
-	Bar(x+250,y+90,x+345,y+115,DEEP_SKY_BLUE);
-	printHZ16(x+255,y+94,"加入购物车",BLACK,1,1,1);
-	Putbmp64k(x+5,y+5,picname);
-	
-	//printHZ16(x+5,y+5,good->name,BLACK,2,2,1);
-	//put_asc(x+5,y+30,good);
-}
 
-void put_cart(int x,int y,good g){
-	Barshadow(x,y,x+350,y+120,WHITE,GRAY);
-	Frame(x,y,x+350,y+120,GRAY,2);
-	Bar(x+250,y+90,x+345,y+115,DEEP_SKY_BLUE);
-	
-}
+
+
 
 
 void draw_welcome(void){
@@ -142,6 +125,54 @@ void draw_regis(void){
 	return ;
 }
 
+void put_name(int x,int y,good g){
+	//输出商品名
+	if(strcmp(g.picpath,"ea0"))	printHZ16(x+100,y+15,"进口特级金钱腱",BLACK,1,1,1);
+	if(strcmp(g.picpath,"ea1"))	printHZ16(x+100,y+15,"新鲜大白菜",BLACK,1,1,1);
+	if(strcmp(g.picpath,"ea2"))	printHZ16(x+100,y+15,"大闸蟹",BLACK,1,1,1);
+	if(strcmp(g.picpath,"ea3"))	printHZ16(x+100,y+15,"农家土猪肘",BLACK,1,1,1);
+	if(strcmp(g.picpath,"bo0"))	printHZ16(x+100,y+15,"标准程序设计及应用",BLACK,1,1,1);
+	if(strcmp(g.picpath,"bo1"))	printHZ16(x+100,y+15,"面向对象程序设计",BLACK,1,1,1);
+	if(strcmp(g.picpath,"bo2"))	printHZ16(x+100,y+15,"自动控制原理",BLACK,1,1,1);
+	if(strcmp(g.picpath,"el0"))	printHZ16(x+100,y+15,"高级智能电冰箱",BLACK,1,1,1);
+	if(strcmp(g.picpath,"el1"))	printHZ16(x+100,y+15,"智能电吹风",BLACK,1,1,1);
+	if(strcmp(g.picpath,"el2"))	printHZ16(x+100,y+15,"智能微波炉",BLACK,1,1,1);
+	if(strcmp(g.picpath,"fu0"))	printHZ16(x+100,y+15,"家居拖鞋",BLACK,1,1,1);
+	if(strcmp(g.picpath,"fu1"))	printHZ16(x+100,y+15,"断电必备可充电台灯",BLACK,1,1,1);
+	if(strcmp(g.picpath,"fu2"))	printHZ16(x+100,y+15,"床上四件套",BLACK,1,1,1);
+	if(strcmp(g.picpath,"re0"))	printHZ16(x+100,y+15,"新鲜黄花鱼",BLACK,1,1,1);
+	if(strcmp(g.picpath,"re1"))	printHZ16(x+100,y+15,"小米智能空气净化器",BLACK,1,1,1);
+	if(strcmp(g.picpath,"re2"))	printHZ16(x+100,y+15,"疫情必备防病毒口罩",BLACK,1,1,1);
+}
+
+void put_good(int x,int y,good g){
+	char *picname = "..\\file\\bmp\\";
+	strcat(picname,g.picpath);
+	strcat(picname,".bmp");
+	
+	Barshadow(x,y,x+350,y+120,WHITE,GRAY);
+	Frame(x,y,x+350,y+120,GRAY,2);
+	//商品名
+	put_name(x,y,g);
+	//库存
+	printHZ16(x+100,y+100,"库存量",BLACK,1,1,1);
+	put_asc(x+180,y+100,g.inventory,DARK_GRAY,1,1);
+	//价格
+	printHZ16(x+100,y+60,"价格",BLACK,1,1,1);
+	put_asc(x+180,y+60,g.price,DARK_GRAY,1,1);
+	//加入购物车按钮
+	Bar(x+250,y+90,x+345,y+115,DEEP_SKY_BLUE);
+	printHZ16(x+255,y+94,"加入购物车",BLACK,1,1,1);
+	Putbmp64k(x+5,y+5,picname);
+	
+}
+
+void put_cart(int x,int y,good g){
+	Barshadow(x,y,x+350,y+120,WHITE,GRAY);
+	Frame(x,y,x+350,y+120,GRAY,2);
+	Bar(x+250,y+90,x+345,y+115,DEEP_SKY_BLUE);
+	
+}
 //用户登陆后主界面
 void draw_usermainpage(){
 	int i ;

@@ -303,14 +303,14 @@ int UserCart(User *loginuser,Cart *usercart){
 
         //鼠标点击
         if(Mouse_press(1,60,110,140)){
-            return 51;
+            return 51;  //进入用户信息页
         }
 
         if(Mouse_press(1,141,110,220)){
-            return 52;
+            return 52;  //进入购物车页面
         }
         if(Mouse_press(1,221,110,300)){
-            return 53;
+            return 53;  //进入订单页面
         }
 
 
@@ -318,7 +318,7 @@ int UserCart(User *loginuser,Cart *usercart){
     }
 }
 
-int UserOrder(User *loginuser){
+int UserOrder(User *loginuser,Cart *usercart){
     int flag[4] = {0};
     Initmouse(1,1023,1,767);
     draw_usercart();
@@ -397,11 +397,12 @@ int Recommend(User *loginuser,Cart *usercart,recommends *recommend){
         put_good(150,100,recommend->good[0]);
         put_good(150,250,recommend->good[1]);
         put_good(150,400,recommend->good[2]);
-        put_good(150,550,recommend->good[3]);
-        put_good(600,100,recommend->good[4]);
-        put_good(600,250,recommend->good[5]);
-        put_good(600,400,recommend->good[6]);
-        put_good(600,550,recommend->good[7]);
+        // 暂时只有两个商品
+        //put_good(150,550,recommend->good[3]);
+        //put_good(600,100,recommend->good[4]);
+        //put_good(600,250,recommend->good[5]);
+        //put_good(600,400,recommend->good[6]);
+        //put_good(600,550,recommend->good[7]);
 
     while(1){
         Newxy();
@@ -464,14 +465,21 @@ int Recommend(User *loginuser,Cart *usercart,recommends *recommend){
             flag[4] = 0;
         }
 
-        if(Mouse_press(150,100,500,220))    AddGood(recommend->good[0],usercart);
-        if(Mouse_press(150,250,500,370))    AddGood(recommend->good[1],usercart);
-        if(Mouse_press(150,400,500,530))    AddGood(recommend->good[2],usercart);
-        if(Mouse_press(150,550,500,680))    AddGood(recommend->good[3],usercart);
-        if(Mouse_press(600,100,950,220))    AddGood(recommend->good[4],usercart);
-        if(Mouse_press(600,250,950,370))    AddGood(recommend->good[5],usercart);
-        if(Mouse_press(600,400,950,530))    AddGood(recommend->good[6],usercart);
-        if(Mouse_press(600,550,950,680))    AddGood(recommend->good[7],usercart);
+        if(Mouse_press(150,100,500,220)){
+            AddGood(recommend->good[0],usercart);
+        }     
+        if(Mouse_press(150,250,500,370)){
+            AddGood(recommend->good[1],usercart);
+        }  
+        if(Mouse_press(150,400,500,530)){
+            AddGood(recommend->good[2],usercart);
+        } 
+        //if(Mouse_press(150,550,500,680))    AddGood(recommend->good[3],usercart);
+        //if(Mouse_press(600,100,950,220))    AddGood(recommend->good[4],usercart);
+        //if(Mouse_press(600,250,950,370))    AddGood(recommend->good[5],usercart);
+        //if(Mouse_press(600,400,950,530))    AddGood(recommend->good[6],usercart);
+        //if(Mouse_press(600,550,950,680))    AddGood(recommend->good[7],usercart);
+
 
     }
 }
@@ -485,11 +493,11 @@ int Book(User *loginuser,Cart *usercart,books *book){
         put_good(150,100,book->good[0]);
         put_good(150,250,book->good[1]);
         put_good(150,400,book->good[2]);
-        put_good(150,550,book->good[3]);
-        put_good(600,100,book->good[4]);
-        put_good(600,250,book->good[5]);
-        put_good(600,400,book->good[6]);
-        put_good(600,550,book->good[7]);
+        //put_good(150,550,book->good[3]);
+        //put_good(600,100,book->good[4]);
+        //put_good(600,250,book->good[5]);
+       // put_good(600,400,book->good[6]);
+       // put_good(600,550,book->good[7]);
 
     while(1){
         Newxy();
@@ -552,14 +560,20 @@ int Book(User *loginuser,Cart *usercart,books *book){
             flag[4] = 0;
         }
 
-        if(Mouse_press(150,100,500,220))    AddGood(book->good[0],usercart);
-        if(Mouse_press(150,250,500,370))    AddGood(book->good[1],usercart);
-        if(Mouse_press(150,400,500,530))    AddGood(book->good[2],usercart);
-        if(Mouse_press(150,550,500,680))    AddGood(book->good[3],usercart);
-        if(Mouse_press(600,100,950,220))    AddGood(book->good[4],usercart);
-        if(Mouse_press(600,250,950,370))    AddGood(book->good[5],usercart);
-        if(Mouse_press(600,400,950,530))    AddGood(book->good[6],usercart);
-        if(Mouse_press(600,550,950,680))    AddGood(book->good[7],usercart);
+        if(Mouse_press(150,100,500,220)){
+            AddGood(book->good[0],usercart);
+        }   
+        if(Mouse_press(150,250,500,370)){
+            AddGood(book->good[1],usercart);
+        }  
+        if(Mouse_press(150,400,500,530)){
+            AddGood(book->good[2],usercart);
+        }
+        //if(Mouse_press(150,550,500,680))    AddGood(book->good[3],usercart);
+        //if(Mouse_press(600,100,950,220))    AddGood(book->good[4],usercart);
+        //if(Mouse_press(600,250,950,370))    AddGood(book->good[5],usercart);
+        //if(Mouse_press(600,400,950,530))    AddGood(book->good[6],usercart);
+        //if(Mouse_press(600,550,950,680))    AddGood(book->good[7],usercart);
     }
 }
 
@@ -575,10 +589,10 @@ int Eat(User *loginuser,Cart *usercart,eats *eat){
         put_good(150,250,eat->good[1]);
         put_good(150,400,eat->good[2]);
         put_good(150,550,eat->good[3]);
-        put_good(600,100,eat->good[4]);
-        put_good(600,250,eat->good[5]);
-        put_good(600,400,eat->good[6]);
-        put_good(600,550,eat->good[7]);
+        //put_good(600,100,eat->good[4]);
+        //put_good(600,250,eat->good[5]);
+        //put_good(600,400,eat->good[6]);
+        //put_good(600,550,eat->good[7]);
 
     while(1){
         Newxy();
@@ -640,14 +654,22 @@ int Eat(User *loginuser,Cart *usercart,eats *eat){
             printHZ16(30,300,"生鲜",DIMGRAY,1,1,1);
             flag[4] = 0;
         }
-        if(Mouse_press(150,100,500,220))    AddGood(eat->good[0],usercart);
-        if(Mouse_press(150,250,500,370))    AddGood(eat->good[1],usercart);
-        if(Mouse_press(150,400,500,530))    AddGood(eat->good[2],usercart);
-        if(Mouse_press(150,550,500,680))    AddGood(eat->good[3],usercart);
-        if(Mouse_press(600,100,950,220))    AddGood(eat->good[4],usercart);
-        if(Mouse_press(600,250,950,370))    AddGood(eat->good[5],usercart);
-        if(Mouse_press(600,400,950,530))    AddGood(eat->good[6],usercart);
-        if(Mouse_press(600,550,950,680))    AddGood(eat->good[7],usercart);
+        if(Mouse_press(150,100,500,220)){
+            AddGood(eat->good[0],usercart);
+        } 
+        if(Mouse_press(150,250,500,370)){
+            AddGood(eat->good[1],usercart);
+        }    
+        if(Mouse_press(150,400,500,530)){
+             AddGood(eat->good[2],usercart);
+        }   
+        if(Mouse_press(150,550,500,680)){
+            AddGood(eat->good[3],usercart);
+        }    
+        //if(Mouse_press(600,100,950,220))    AddGood(eat->good[4],usercart);
+        //if(Mouse_press(600,250,950,370))    AddGood(eat->good[5],usercart);
+        //if(Mouse_press(600,400,950,530))    AddGood(eat->good[6],usercart);
+        //if(Mouse_press(600,550,950,680))    AddGood(eat->good[7],usercart);
     }
 }
 
@@ -660,11 +682,11 @@ int Electric(User *loginuser,Cart *usercart,electrics *electric){
         put_good(150,100,electric->good[0]);
         put_good(150,250,electric->good[1]);
         put_good(150,400,electric->good[2]);
-        put_good(150,550,electric->good[3]);
-        put_good(600,100,electric->good[4]);
-        put_good(600,250,electric->good[5]);
-        put_good(600,400,electric->good[6]);
-        put_good(600,550,electric->good[7]);
+       // put_good(150,550,electric->good[3]);
+       // put_good(600,100,electric->good[4]);
+        //put_good(600,250,electric->good[5]);
+       // put_good(600,400,electric->good[6]);
+       // put_good(600,550,electric->good[7]);
 
     while(1){
         Newxy();
@@ -726,14 +748,20 @@ int Electric(User *loginuser,Cart *usercart,electrics *electric){
             printHZ16(30,300,"生鲜",DIMGRAY,1,1,1);
             flag[4] = 0;
         }
-        if(Mouse_press(150,100,500,220))    AddGood(electric->good[0],usercart);
-        if(Mouse_press(150,250,500,370))    AddGood(electric->good[1],usercart);
-        if(Mouse_press(150,400,500,530))    AddGood(electric->good[2],usercart);
-        if(Mouse_press(150,550,500,680))    AddGood(electric->good[3],usercart);
-        if(Mouse_press(600,100,950,220))    AddGood(electric->good[4],usercart);
-        if(Mouse_press(600,250,950,370))    AddGood(electric->good[5],usercart);
-        if(Mouse_press(600,400,950,530))    AddGood(electric->good[6],usercart);
-        if(Mouse_press(600,550,950,680))    AddGood(electric->good[7],usercart);
+        if(Mouse_press(150,100,500,220)){
+            AddGood(electric->good[0], usercart);
+        } 
+        if(Mouse_press(150,250,500,370)){
+             AddGood(electric->good[1],usercart);
+        }   
+        if(Mouse_press(150,400,500,530)) {
+            AddGood(electric->good[2],usercart);
+        } 
+        //if(Mouse_press(150,550,500,680))    AddGood(electric->good[3],usercart);
+        //if(Mouse_press(600,100,950,220))    AddGood(electric->good[4],usercart);
+        //if(Mouse_press(600,250,950,370))    AddGood(electric->good[5],usercart);
+        //if(Mouse_press(600,400,950,530))    AddGood(electric->good[6],usercart);
+        //if(Mouse_press(600,550,950,680))    AddGood(electric->good[7],usercart);
     }
 }
 
@@ -747,11 +775,11 @@ int Furniture(User *loginuser,Cart *usercart,furnitures *furniture){
         put_good(150,100,furniture->good[0]);
         put_good(150,250,furniture->good[1]);
         put_good(150,400,furniture->good[2]);
-        put_good(150,550,furniture->good[3]);
-        put_good(600,100,furniture->good[4]);
-        put_good(600,250,furniture->good[5]);
-        put_good(600,400,furniture->good[6]);
-        put_good(600,550,furniture->good[7]);
+        //put_good(150,550,furniture->good[3]);
+        //put_good(600,100,furniture->good[4]);
+       // put_good(600,250,furniture->good[5]);
+       // put_good(600,400,furniture->good[6]);
+       // put_good(600,550,furniture->good[7]);
         
     while(1){
         Newxy();
@@ -814,14 +842,20 @@ int Furniture(User *loginuser,Cart *usercart,furnitures *furniture){
 			flag[4] = 0;
 		}
 
-        if(Mouse_press(150,100,500,220))    AddGood(furniture->good[0],usercart);
-        if(Mouse_press(150,250,500,370))    AddGood(furniture->good[1],usercart);
-        if(Mouse_press(150,400,500,530))    AddGood(furniture->good[2],usercart);
-        if(Mouse_press(150,550,500,680))    AddGood(furniture->good[3],usercart);
-        if(Mouse_press(600,100,950,220))    AddGood(furniture->good[4],usercart);
-        if(Mouse_press(600,250,950,370))    AddGood(furniture->good[5],usercart);
-        if(Mouse_press(600,400,950,530))    AddGood(furniture->good[6],usercart);
-        if(Mouse_press(600,550,950,680))    AddGood(furniture->good[7],usercart);
+        if(Mouse_press(150,100,500,220)){
+            AddGood(furniture->good[0],usercart);
+        }    
+        if(Mouse_press(150,250,500,370)){
+            AddGood(furniture->good[1],usercart);
+        }    
+        if(Mouse_press(150,400,500,530)){
+            AddGood(furniture->good[2],usercart);
+        }    
+        //if(Mouse_press(150,550,500,680))    AddGood(furniture->good[3],usercart);
+        //if(Mouse_press(600,100,950,220))    AddGood(furniture->good[4],usercart);
+        //if(Mouse_press(600,250,950,370))    AddGood(furniture->good[5],usercart);
+       // if(Mouse_press(600,400,950,530))    AddGood(furniture->good[6],usercart);
+       // if(Mouse_press(600,550,950,680))    AddGood(furniture->good[7],usercart);
 
 
 	}

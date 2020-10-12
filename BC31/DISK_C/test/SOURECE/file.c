@@ -188,19 +188,23 @@ int UserUpdate(User *loginuser, int mode, char *tar)
 	}
 }
 
+void InitCart(Cart *usercart){
+	usercart->top=0;
+}
 /*
 Function : 将用户选择的商品添加入购物车
 Return :
 */
 void AddGood(good g,Cart *usercart){
 	usercart->cartgood[usercart->top++] = g;
+	usercart->price += atof(g.price);
 }
 
 
 
-void Initgood(electrics *electric,books *book,furnitures *furniture,recommends *recommend){
+void Initgood(eats *eat,electrics *electric,books *book,furnitures *furniture,recommends *recommend){
 	FILE *fp;
-	int i=0;
+	int i = 0;
 	
 	//读入食品信息
 	fp = fopen("..\\file\\storage\\eat.txt","r");
@@ -208,43 +212,53 @@ void Initgood(electrics *electric,books *book,furnitures *furniture,recommends *
 		printf("can't open eat.txt");
 	}
 	while(!feof(fp)){
-		if(fscanf(fp,"%s=%.2f=%d\n",eat->ea[i].picpath,&eat->ea[i].price,&eat->ea[i].inventory)==0)
+		if(fscanf(fp,"%s=%s=%s\n",eat->ea[i].picpath,eat->ea[i].price,eat->ea[i].inventory)==0)
 			break;
+		else i++;
 	}
+	i=0;
 	//读入图书信息
 	fp = fopen("..\\file\\storage\\book.txt","r");
 	if(fp=NULL){
 		printf("can't open book.txt");
 	}
 	while(!feof(fp)){
-		if(fscanf(fp,"%s=%.2f=%d\n",book->bo[i].picpath,&book->bo[i].price,&book->bo[i].inventory)==0)
+		if(fscanf(fp,"%s=%s=%s\n",book->bo[i].picpath,book->bo[i].price,book->bo[i].inventory)==0)
 			break;
+	else i++;
 	}
+	i=0;
 	//读入家居信息
 	fp = fopen("..\\file\\storage\\furniture.txt","r");
 	if(fp=NULL){
 		printf("can't open furniture.txt");
 	}
 	while(!feof(fp)){
-		if(fscanf(fp,"%s=%.2f=%d\n",furniture->fu[i].picpath,&furniture->fu[i].price,&furniture->fu[i].inventory)==0)
+		if(fscanf(fp,"%s=%s=%s\n",furniture->fu[i].picpath,furniture->fu[i].price,furniture->fu[i].inventory)==0)
 			break;
+		else i++;
 	}
+	i=0;
 	//读入电器信息
-	fp = fopen("..\\file\\storage\\book.txt","r");
+	fp = fopen("..\\file\\storage\\electric.txt","r");
 	if(fp=NULL){
-		printf("can't open book.txt");
+		printf("can't open electric.txt");
 	}
 	while(!feof(fp)){
-		if(fscanf(fp,"%s=%.2f=%d\n",book->bo[i].picpath,&book->bo[i].price,&book->bo[i].inventory)==0)
+		if(fscanf(fp,"%s=%s=%s\n",electric->el[i].picpath,electric->el[i].price,electric->el[i].inventory)==0)
 			break;
+		else i++;
 	}
+	i=0;
 	//读入推荐信息
 	fp = fopen("..\\file\\storage\\recommend.txt","r");
 	if(fp=NULL){
 		printf("can't open recommend.txt");
 	}
 	while(!feof(fp)){
-		if(fscanf(fp,"%s=%.2f=%d\n",recommend->re[i].picpath,&recommend->re[i].price,&recommend->re[i].inventory)==0)
+		if(fscanf(fp,"%s=%s=%s\n",recommend->re[i].picpath,recommend->re[i].price,recommend->re[i].inventory)==0)
 			break;
+		else i++;
 	}
+	i=0;
 }
