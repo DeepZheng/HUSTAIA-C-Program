@@ -8,9 +8,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "file.h"
+#include "DRAW.H"
+#include "SVGAmode.H"
 #include "HANZI.H"
 #include "TSTRUCT.H"
-#include"color.h"
+#include "mouse.h"
+#include "color.h"
 
 /*
 Function : 用户初始化
@@ -23,6 +26,7 @@ void UserInit(User *loginuser) //用户初始化
 	strcpy(loginuser->code, init);
 	strcpy(loginuser->tel, init);
 	loginuser->pos = 'z';
+	loginuser->ordernum = 0;	//订单数清零
 	//strcpy(loginuser->pos,"\0");
 	loginuser->t = '\n'; //换行
 	//memset(pos,0,sizeof(pos));
@@ -118,6 +122,7 @@ void UserCopy(User *loginuser, User *copy)
 	strcpy(loginuser->code, copy->code);
 	strcpy(loginuser->tel, copy->tel);
 	loginuser->pos = copy->pos;
+	loginuser->ordernum = copy->ordernum;
 	loginuser->t = copy->t;
 }
 
@@ -187,6 +192,7 @@ int UserUpdate(User *loginuser, int mode, char *tar)
 		break;
 	}
 }
+
 
 void InitCart(Cart *usercart){
 	usercart->top=0;
@@ -261,4 +267,28 @@ void Initgood(eats *eat,electrics *electric,books *book,furnitures *furniture,re
 		else i++;
 	}
 	i=0;
+}
+
+/*
+Function : 将购物车内商品转为订单写入文件中
+Return : 1 写入成功
+*/
+int AddList(Cart *usercart,User *loginuser){
+	int i;
+	FILE *fp;
+	list newlist;
+	newlist.list_state = 0;	//未发货
+	strcpy(newlist.name,loginuser->name);	// 下订单的用户名
+	fp = fopen ("..\\file\\list\\list.txt","a+");
+	for (i =0 ;i <usercart->top;i++){
+		newlist.G[i] = usercart->cartgood;
+	}
+	fwrite(newlist,sizeof(list),1,fp);
+	fclose(fp);
+	return 1;
+}
+
+int FindList(User *loginuser){
+	FILE *fp;
+	
 }

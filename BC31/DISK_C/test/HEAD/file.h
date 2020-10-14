@@ -15,6 +15,7 @@ int UserAdd(User *loginuser);
 void UserCopy(User *loginuser, User *copy);
 int UserDel(User *loginuser);
 int UserUpdate(User *loginuser,int mode,char *tar);
+int AddList(Cart *usercart,User *loginuser);
 void InitCart(Cart *usercart);
 void Initgood(eats *eat,electrics *electric,books *book,furnitures *furniture,recommends *recommend);
 void AddGood(good g,Cart *usercart);

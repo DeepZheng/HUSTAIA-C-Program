@@ -168,9 +168,21 @@ void put_good(int x,int y,good g){
 }
 
 void put_cart(int x,int y,good g){
+	char *picname = "..\\file\\bmp\\";
+	strcat(picname,g.picpath);
+	strcat(picname,".bmp");
+	
 	Barshadow(x,y,x+350,y+120,WHITE,GRAY);
 	Frame(x,y,x+350,y+120,GRAY,2);
-	Bar(x+250,y+90,x+345,y+115,DEEP_SKY_BLUE);
+	//商品名
+	put_name(x,y,g);
+	//库存
+	printHZ16(x+100,y+100,"库存量",BLACK,1,1,1);
+	put_asc(x+180,y+100,g.inventory,DARK_GRAY,1,1);
+	//价格
+	printHZ16(x+100,y+60,"价格",BLACK,1,1,1);
+	put_asc(x+180,y+60,g.price,DARK_GRAY,1,1);
+	Putbmp64k(x+5,y+5,picname);
 	
 }
 //用户登陆后主界面
@@ -305,6 +317,7 @@ void draw_userinfo(User *loginuser){
 
 void draw_usercart(Cart *usercart){
 	int i ;
+	char price[8];
 	Bar (1,1,1023,50,LIGHT_SEA_GREEN);
 	Bar (101,51,1023,767,WHITE);
 	Bar (1,51,110,767,MUSTARD);
@@ -328,11 +341,12 @@ void draw_usercart(Cart *usercart){
 	printHZ16(10,260,"我的订单",BLACK,1,1,2);
 	printHZ16(10,340,"评价订单",BLACK,1,1,2);
 
-	Bar(110,700,1023,767,LIGHT_SEA_GREEN);
-	Bar(900,705,1010,750,RED);
+	Bar(110,700,1023,767,LIGHT_SEA_GREEN);		//界面下方功能条
+	Bar(900,705,1010,750,RED);		//结算按钮
 	printHZ16(925,715,"立即结算",WHITE,1,1,1);
 	printHZ16(600,720,"总计",BLACK,2,2,1);
-
+	sprintf(price,"%s",usercart->price);	//将float型价格转换为字符串型方便输出
+	put_asc(700,720,price,RED,2,2);
 	    //放置商品 
 		i = usercart->top;
 		if(i<=1)	put_cart(600,550,usercart->cartgood[0]);
@@ -344,8 +358,46 @@ void draw_usercart(Cart *usercart){
         if(i<=7)	put_cart(600,250,usercart->cartgood[6]);
         if(i<=8)	put_cart(600,400,usercart->cartgood[7]);
        
+}
 
+void draw_userorder(list *userlist){
+	int i ;
+	char price[8];
+	Bar (1,1,1023,50,LIGHT_SEA_GREEN);
+	Bar (101,51,1023,767,WHITE);
+	Bar (1,51,110,767,MUSTARD);
 
+	for(i=1;i<5;i++){
+		printHZ16(15+i,10+i,"帅团",GRAY,2,2,4);
+	}
+	printHZ16(15,10,"帅团",BLACK,2,2,4);
+	//退出图标
+	for(i=8;i<=10;i++){
+		Circle(900,20,i,0);
+		Liney(909-i,8,909-i,16,0);
+	}
+	printHZ16(920,15,"退出",0,1,1,1);
+
+	printHZ16(700,15,"返回首页" ,0,1,1,1);
+	Rectangle(790,810,30,20,BLACK);
+
+	printHZ16(10,100,"个人信息",BLACK,1,1,2);
+	printHZ16(10,180,"购物车",BLACK,1,1,2);
+	printHZ16(10,260,"我的订单",BLACK,1,1,2);
+	printHZ16(10,340,"评价订单",BLACK,1,1,2);
+
+	
+	    //放置商品 
+		i = usercart->top;
+		if(i<=1)	put_cart(600,550,usercart->cartgood[0]);
+        if(i<=2)	put_cart(150,100,usercart->cartgood[1]);
+        if(i<=3)	put_cart(150,250,usercart->cartgood[2]);
+        if(i<=4)	put_cart(150,400,usercart->cartgood[3]);
+        if(i<=5)	put_cart(150,550,usercart->cartgood[4]);
+        if(i<=6)	put_cart(600,100,usercart->cartgood[5]);
+        if(i<=7)	put_cart(600,250,usercart->cartgood[6]);
+        if(i<=8)	put_cart(600,400,usercart->cartgood[7]);
+       
 }
 
 

@@ -312,16 +312,66 @@ int UserCart(User *loginuser,Cart *usercart){
         if(Mouse_press(1,221,110,300)){
             return 53;  //进入订单页面
         }
-
-
-
+        if(Mouse_press(900,705,1010,750)){
+            if(UserPay(usercart,loginuser)){
+                return 53;      //跳转到订单页面
+            }
+        }
     }
 }
+
+int UserPay(Cart *usercart,User *loginuser){
+    int flag = 0;
+	Initmouse(1,1,1023,767);
+	Bar(400,300,600,450,GRAY);
+    printHZ16(420,320,"正在处理",BLACK,2,2,1);
+    delay(600);
+	Bar(300,200,750,600,WHITE);
+	Frame(300,200,750,600,DARK_GRAY,5);
+	printHZ16(500,210,"请付款",BLACK,2,2,1);
+	Putbmp64k(310,250,"..\\file\\bmp\\wx.bmp");
+	Putbmp64k(535,250,"..\\file\\bmp\\zfb.bmp");
+	Barshadow(500,550,550,580,SPRING_GREEN,GRAY);
+	printHZ16(510,555,"我已付款",BLACK,1,1,1);
+	while(1){
+		Newxy();
+        //鼠标移在按钮上阴影功能
+        if(Mouse_above(500,550,550,580)&&!flag){
+            Bar(500,550,550,580,TURQUOISE);
+            printHZ16(510,555,"我已付款",BLACK,1,1,1);
+            flag = 1;
+        }
+		else if (Mouse_aboveother(500,550,550,580)&&flag){
+            Bar(500,550,550,580,SPRING_GREEN,GRAY);
+            printHZ16(510,555,"我已付款",BLACK,1,1,1);
+            flag = 0;
+        }
+		if(Mouse_press(500,550,550,580)){
+            if(AddList(usercart,loginuser)){
+                loginuser->ordernum++;
+                Bar(400,300,600,450,WHITE);
+                Frame(400,300,600,450,DARK_GRAY,2);
+                printHZ16(420,320,"付款成功",BLACK,2,2,1);
+                delay(600);
+                Bar(420,320,550,400,WHITE);
+                printHZ16(420,320,"页面跳转中",BLACK,2,2,1);
+                delay(600);
+                break;
+            }
+			
+		}
+	}
+	return 1;
+}
+
+/****
+ * 用户订单页
+*****/
 
 int UserOrder(User *loginuser,Cart *usercart){
     int flag[4] = {0};
     Initmouse(1,1023,1,767);
-    draw_usercart();
+    draw_userorder(loginuser);
 
     while(1){
         Newxy();
@@ -467,12 +517,18 @@ int Recommend(User *loginuser,Cart *usercart,recommends *recommend){
 
         if(Mouse_press(150,100,500,220)){
             AddGood(recommend->good[0],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }     
         if(Mouse_press(150,250,500,370)){
             AddGood(recommend->good[1],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }  
         if(Mouse_press(150,400,500,530)){
             AddGood(recommend->good[2],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         } 
         //if(Mouse_press(150,550,500,680))    AddGood(recommend->good[3],usercart);
         //if(Mouse_press(600,100,950,220))    AddGood(recommend->good[4],usercart);
@@ -562,12 +618,18 @@ int Book(User *loginuser,Cart *usercart,books *book){
 
         if(Mouse_press(150,100,500,220)){
             AddGood(book->good[0],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }   
         if(Mouse_press(150,250,500,370)){
             AddGood(book->good[1],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }  
         if(Mouse_press(150,400,500,530)){
             AddGood(book->good[2],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }
         //if(Mouse_press(150,550,500,680))    AddGood(book->good[3],usercart);
         //if(Mouse_press(600,100,950,220))    AddGood(book->good[4],usercart);
@@ -656,15 +718,23 @@ int Eat(User *loginuser,Cart *usercart,eats *eat){
         }
         if(Mouse_press(150,100,500,220)){
             AddGood(eat->good[0],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         } 
         if(Mouse_press(150,250,500,370)){
             AddGood(eat->good[1],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }    
         if(Mouse_press(150,400,500,530)){
              AddGood(eat->good[2],usercart);
+             printHZ16(300,700,"添加成功",BLACK,2,2,1);
+             delay(600);
         }   
         if(Mouse_press(150,550,500,680)){
             AddGood(eat->good[3],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }    
         //if(Mouse_press(600,100,950,220))    AddGood(eat->good[4],usercart);
         //if(Mouse_press(600,250,950,370))    AddGood(eat->good[5],usercart);
@@ -750,12 +820,18 @@ int Electric(User *loginuser,Cart *usercart,electrics *electric){
         }
         if(Mouse_press(150,100,500,220)){
             AddGood(electric->good[0], usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         } 
         if(Mouse_press(150,250,500,370)){
              AddGood(electric->good[1],usercart);
+             printHZ16(300,700,"添加成功",BLACK,2,2,1);
+             delay(600);
         }   
         if(Mouse_press(150,400,500,530)) {
             AddGood(electric->good[2],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         } 
         //if(Mouse_press(150,550,500,680))    AddGood(electric->good[3],usercart);
         //if(Mouse_press(600,100,950,220))    AddGood(electric->good[4],usercart);
@@ -844,12 +920,18 @@ int Furniture(User *loginuser,Cart *usercart,furnitures *furniture){
 
         if(Mouse_press(150,100,500,220)){
             AddGood(furniture->good[0],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }    
         if(Mouse_press(150,250,500,370)){
             AddGood(furniture->good[1],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }    
         if(Mouse_press(150,400,500,530)){
             AddGood(furniture->good[2],usercart);
+            printHZ16(300,700,"添加成功",BLACK,2,2,1);
+            delay(600);
         }    
         //if(Mouse_press(150,550,500,680))    AddGood(furniture->good[3],usercart);
         //if(Mouse_press(600,100,950,220))    AddGood(furniture->good[4],usercart);

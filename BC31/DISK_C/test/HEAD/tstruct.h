@@ -17,9 +17,10 @@
 typedef struct User{
     char name[10];  //用户账号
     char code[15];  //用户密码
-    char tel[12];
-	char pos;   //
-    char t;        //用户定位，暂时只有武汉
+    char tel[12];	//用户电话号码
+	char pos;   //用户定位，暂时只有武汉
+	int ordernum;	//订单数量
+    char t;        //换行符
 } User;
 
 /*typedef struct ratings{
@@ -69,6 +70,7 @@ typedef struct {
 }Cart;
 
 typedef struct list{
+	char name[15];	//订单用户
 	int list_state; //订单状态,0为未处理,1为已处理
 	char pos; //订单发货地址
 	good G[10];  //最多允许在一个订单中订购10种商品
