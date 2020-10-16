@@ -8,7 +8,7 @@
 int manage_goods(storage *sto)
 {   
     int flag=1; //连接各个子功能
-    int pagenum=1;
+ //   int pagenum=1;
 
     while(1)
     {
@@ -20,16 +20,16 @@ int manage_goods(storage *sto)
             flag=select_managegoods();  //默认状态,选择进入哪个具体的功能模块
             break;
         case 2:
-            flag=display_storage(sto,2,&pagenum);
+            flag=display_storage(sto,2);
             break;
         case 3:
-  //          flag=add_goods(sto); //增加新商品
+            flag=add_goods(sto); //增加新商品
             break;
         case 4:
-  //          flag=adjust_goods(sto); //调整商品信息(库存量和价钱,别的信息不允许调整)
+            flag=adjust_goods(sto); //调整商品信息(库存量和价钱,别的信息不允许调整)
             break;
         case 5:
-  //          flag=discard_goods(sto); //从货架中移除某种商品
+            flag=discard_goods(sto); //从货架中移除某种商品
             break;
         case 6:
             return 1;  //回到商家端主界面
@@ -101,7 +101,7 @@ void draw_managegoods()
     printHZ16(660,600,"返回商家主页",BLACK,2,2,2);
 }
 
-int display_storage(storage *sto,int *pagenum)
+int display_storage(storage *sto)
 {
     draw_storage(sto);
     show_storagepage(sto,1); //默认显示第一页的内容
@@ -145,62 +145,58 @@ void draw_storage()
 	printHZ16(770,735,"返回",BLACK,1,1,2);
 }
 
+char* Get_picturepath(good g,char *path)
+{
+    const char *str1="..\\file\\bmp\\";
+    const char *str2=".bmp";
+    strcpy(path,str1);
+    *(path+12)=g.picpath[0];
+    *(path+13)=g.picpath[1];
+    *(path+14)=g.picpath[2];
+    strcat(path,str2);
+    return path;
+}
+
 void show_storagepage(storage *sto,int pagenum)
 {   
     int i=0; //循环变量
-    char inv[5]="\0"; //显示库存量
-    char vol[5]="\0"; //显示销量
-    char pri[5]="\0"; //显示价格
-    char sco[5]="\0" ; //显示评分
+    char inv[4]="\0"; //显示库存量
+    char pri[8]="\0"; //显示价格
+    char path[20]; //生成图片路径
     if(pagenum==1)
     {
         for(i=0;i<4;i++)
         {   
             if(i>=sto->goods_amount) 
                 break;
-            Putbmp64k(75,165+140*i,sto->G[i].picpath);
+            Putbmp64k(75,165+140*i,Get_picturepath(sto->G[i],path));
             printHZ16(180,165+140*i,"商品名",BLACK,1,1,1);
-            put_asc(260,165+140*i,sto->G[i].name,BLACK,1,1);
+            put_asc(260,165+140*i,(sto->G[i].picpath)+3,BLACK,1,1);
             printHZ16(180,185+140*i,"售价",BLACK,1,1,1);
             sprintf(pri,".2f",sto->G[i].price);
             put_asc(240,185+140*i,pri,BLACK,1,1);
-            pri[0]='\0';  //复位,准备下一个输入
-            printHZ16(180,205+140*i,"销量",BLACK,1,1,1);
-            sprintf(vol,"%d",sto->G[i].sale_volume);
-            put_asc(240,205+140*i,vol,BLACK,1,1);
-            vol[0]='\0';
+            pri[0]='\0';  //复位,准备下一个输入           
             printHZ16(180,225+140*i,"库存量",BLACK,1,1,1);
             sprintf(inv,"%d",sto->G[i].inventory);
             put_asc(250,225+140*i,inv,BLACK,1,1);
             inv[0]='\0';
-            printHZ16(180,245+140*i,"用户评分",BLACK,1,1,1);
-            sprintf(sco,"%.2f",sto->G[i].rat.average);
-            put_asc(270,245+140*i,sco,BLACK,1,1);
-            sco[0]='\0';
+            
         }
         for(i=4;i<8;i++)
         {   
             if(i>=sto->goods_amount) 
                 break;
-            Putbmp64k(535,165+140*(i-4),sto->G[i].picpath);
+            Putbmp64k(535,165+140*(i-4),Get_picturepath(sto->G[i],path);
             printHZ16(640,165+140*(i-4),"商品名",BLACK,1,1,1);
-            put_asc(710,165+140*(i-4),sto->G[i].name,BLACK,1,1);
+            put_asc(710,165+140*(i-4),(sto->G[i].picpath)+3,BLACK,1,1);
             printHZ16(640,185+140*(i-4),"售价",BLACK,1,1,1);
             sprintf(pri,".2f",sto->G[i].price);
             put_asc(710,185+140*(i-4),pri,BLACK,1,1);
             pri[0]='\0';  //复位,准备下一个输入
-            printHZ16(640,205+140*(i-4),"销量",BLACK,1,1,1);
-            sprintf(vol,"%d",sto->G[i].sale_volume);
-            put_asc(690,205+140*(i-4),vol,BLACK,1,1);
-            vol[0]='\0';
             printHZ16(640,225+140*(i-4),"库存量",BLACK,1,1,1);
             sprintf(inv,"%d",sto->G[i].inventory);
             put_asc(700,225+140*(i-4),inv,BLACK,1,1);
             inv[0]='\0';
-            printHZ16(640,245+140*(i-4),"用户评分",BLACK,1,1,1);
-            sprintf(sco,"%.2f",sto->G[i].rat.average);
-            put_asc(720,245+140*(i-4),sco,BLACK,1,1);
-            sco[0]='\0';
         }
     }
     else if(pagenum==2)
@@ -209,49 +205,33 @@ void show_storagepage(storage *sto,int pagenum)
         {   
             if(i>=sto->goods_amount) 
                 break;
-            Putbmp64k(75,165+140*(i-8),sto->G[i].picpath);
+            Putbmp64k(75,165+140*(i-8),Get_picturepath(sto->G[i],path);
             printHZ16(180,165+140*(i-8),"商品名",BLACK,1,1,1);
-            put_asc(260,165+140*(i-8),sto->G[i].name,BLACK,1,1);
+            put_asc(260,165+140*(i-8),(sto->G[i].picpath)+3,BLACK,1,1);
             printHZ16(180,185+140*(i-8),"售价",BLACK,1,1,1);
             sprintf(pri,".2f",sto->G[i].price);
             put_asc(240,185+140*(i-8),pri,BLACK,1,1);
             pri[0]='\0';  //复位,准备下一个输入
-            printHZ16(180,205+140*(i-8),"销量",BLACK,1,1,1);
-            sprintf(vol,"%d",sto->G[i].sale_volume);
-            put_asc(240,205+140*(i-8),vol,BLACK,1,1);
-            vol[0]='\0';
             printHZ16(180,225+140*(i-8),"库存量",BLACK,1,1,1);
             sprintf(inv,"%d",sto->G[i].inventory);
             put_asc(250,225+140*i,inv,BLACK,1,1);
             inv[0]='\0';
-            printHZ16(180,245+140*(i-8),"用户评分",BLACK,1,1,1);
-            sprintf(sco,"%.2f",sto->G[i].rat.average);
-            put_asc(270,245+140*(i-8),sco,BLACK,1,1);
-            sco[0]='\0';
         }
         for(i=12;i<15;i++)
         {   
             if(i>=sto->goods_amount)
                 break;
-            Putbmp64k(535,165+140*(i-12),sto->G[i].picpath);
+            Putbmp64k(535,165+140*(i-12),Get_picturepath(sto->G[i],path);
             printHZ16(640,165+140*(i-12),"商品名",BLACK,1,1,1);
-            put_asc(710,165+140*(i-12),sto->G[i].name,BLACK,1,1);
+            put_asc(710,165+140*(i-12),(sto->G[i].picpath)+3,BLACK,1,1);
             printHZ16(640,185+140*(i-12),"售价",BLACK,1,1,1);
             sprintf(pri,".2f",sto->G[i].price);
             put_asc(710,185+140*(i-12),pri,BLACK,1,1);
             pri[0]='\0';  //复位,准备下一个输入
-            printHZ16(640,205+140*(i-12),"销量",BLACK,1,1,1);
-            sprintf(vol,"%d",sto->G[i].sale_volume);
-            put_asc(690,205+140*(i-12),vol,BLACK,1,1);
-            vol[0]='\0';
             printHZ16(640,225+140*(i-12),"库存量",BLACK,1,1,1);
             sprintf(inv,"%d",sto->G[i].inventory);
             put_asc(700,225+140*(i-12),inv,BLACK,1,1);
             inv[0]='\0';
-            printHZ16(640,245+140*(i-12),"用户评分",BLACK,1,1,1);
-            sprintf(sco,"%.2f",sto->G[i].rat.average);
-            put_asc(720,245+140*(i-12),sco,BLACK,1,1);
-            sco[0]='\0';
         }
     }
 }
@@ -289,7 +269,7 @@ int add_goods(storage *sto)
     char str[7]={'\0'};
     int namelen=0,invlen=0,prilen=0;
     
-    draw_addgoods();
+    draw_addgoods();  //画出添加商品弹窗
 
     while(1)
     {
@@ -343,22 +323,17 @@ int add_goods(storage *sto)
     }
 }
 
-int iuput_adjustment(good *g)
+int iuput_adjustment(storage *sto,int pos)
 {
     good temp;
     char str[7]={'\0'};
     int invlen=0,prilen=0;
     
-    draw_addgoods();
+    draw_adjustgoods();
 
     while(1)
     {
         Newxy();
-        if(Mouse_press(450,400,700,430))
-        {
-            namelen=Input(450,400,700,430,namelen,temp.picpath+3,BLACK,2,2,15,0);
-            temp.picpath[namelen]='\0';
-        }
         if(Mouse_press(550,440,700,470))
         {
             invlen=Input(550,440,700,470,invlen,str,BLACK,2,2,6,0);
@@ -375,22 +350,18 @@ int iuput_adjustment(good *g)
         }
         if(Mouse_press(520,560,600,620))
         {
-            if(namelen&&invlen&&prilen)
+            if(invlen&&prilen)
             {
-                switch (appendstorage(sto,&temp))
+                switch (adjuststorage(sto,pos,temp.inventory,temp.price))
                 {
-                    case 0:
-                        printHZ16(330,550,"未找到该商品",2,2,1);
-                        delay(1500);
-                        return 1;
                     case 1:
-                        printHZ16(330,550,"商品添加成功",2,2,1);
+                        printHZ16(330,550,"信息修改成功",2,2,1);
                         delay(1500);
                         return 1;
                     case 2:
                         printHZ16(330,550,"文件打开失败",2,2,1);
                         delay(1500);
-                        return 1;
+                        return 2;
                     default:
                         break;
                 }
@@ -406,7 +377,7 @@ int iuput_adjustment(good *g)
 int adjust_goods(storage *sto)
 {
     int i=0;
-    good g;
+    char 
     draw_storage();
     printHZ16(50,100,"不要点击没有图的框",RED,1,1,1);
     while (1)
@@ -420,57 +391,49 @@ int adjust_goods(storage *sto)
             {   
                 i=0;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);  //修改完成后,刷新货架页面
             }
             if(Mouse_press(70,300,470,420))
             {   
                 i=1;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(70,440,470,560))
             {   
                 i=2;
                 if(i>=sto->goods_amount)    return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(70,580,470,700))
             {   
                 i=3;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(530,160,930,280))
             {   
                 i=4;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(530,300,930,420))
             {   
                 i=5;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(530,440,930,560))
             {   
                 i=6;
                 if(i>=sto->goods_amount) return 1;
-               
-                shrinkstorage(sto,i);
+               if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
             if(Mouse_press(530,580,930,700))
             {   
                 i=7;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,1);
             }
         }
         if(Mouse_press(826,60,900,140))
@@ -480,57 +443,49 @@ int adjust_goods(storage *sto)
             {   
                 i=8;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(70,300,470,420))
             {   
                 i=9;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(70,440,470,560))
             {   
                 i=10;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(70,580,470,700))
             {   
                 i=11;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(530,160,930,280))
             {   
                 i=12;
                 if(i>=sto->goods_amount) return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(530,300,930,420))
             {   
                 i=13;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(530,440,930,560))
             {   
                 i=14;
                 if(i>=sto->goods_amount) return 1; 
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
             if(Mouse_press(530,580,930,700))
             {   
                 i=15;
                 if(i>=sto->goods_amount)  return 1;
-                
-                shrinkstorage(sto,i);
+                if(adjust_goods(sto,i)==1) show_storagepage(sto,2);
             }
         }
     }

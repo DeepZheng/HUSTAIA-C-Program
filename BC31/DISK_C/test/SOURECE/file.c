@@ -33,7 +33,7 @@ void UserInit(User *loginuser) //用户初始化
 	//更多用户信息待补充
 	return;
 }
-                    l
+                    
 void SellerInit(SELLER *loginseller)
 {
 	char init[3] = "\0";

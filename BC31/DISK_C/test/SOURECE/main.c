@@ -70,23 +70,23 @@ int main(){
                 break;
             }
             case 41:{
-                mark = Recommend(&loginuser);
+                mark = Recommend(&loginuser,&usercart,&recommend);
                 break;
             }
             case 42:{
-                mark = Book(&loginuser);
+                mark = Book(&loginuser,&usercart,&book);
                 break;
             }
             case 43:{
-                mark = Eat(&loginuser);
+                mark = Eat(&loginuser,&usercart,&eat);
                 break;
             }
             case 44:{
-                mark = Electric(&loginuser);
+                mark = Electric(&loginuser,&usercart,&electric);
                 break;
             }
             case 45:{
-                mark = Furniture(&loginuser);
+                mark = Furniture(&loginuser,&usercart,&furniture);
                 break;
             }
             case 5:{

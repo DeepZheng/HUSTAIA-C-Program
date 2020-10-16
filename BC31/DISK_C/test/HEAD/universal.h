@@ -56,9 +56,4 @@
 #define NINE 0x0a39
 #define ZERO 0x0b30
 
-int ascend_cmp(const void *a,const void *b);   // the 2 functions is for utilizing built-in function qsort()
-
-int descend_cmp(const void *a,const void *b);
-
-void SortStrings(char **target,int head,int feet); 
 #endif

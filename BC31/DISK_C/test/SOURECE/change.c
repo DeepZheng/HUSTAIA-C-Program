@@ -151,9 +151,41 @@ void draw_changeinfo()
     Bar(430,380,900,430,WHITE);
     printHZ16(150,530,"输入新电话号码",BLACK,2,2,2);
     Bar(430,530,900,580,WHITE);
-  //  Bar(100,600,300,700,55);
 	Bar(400,600,600,700,AZURE);
 	Bar(700,600,900,700,AZURE);
 	printHZ12(420,630,"确定",BLACK,2,2,2);
 	printHZ12(720,630,"返回",BLACK,2,2,2);
+}
+
+int input_changeinfo(SELLER *s,char *newac,char *newp,char *newpn)
+{
+	int flag=0;
+	FILE *fp=NULL;
+	SELLER temp;
+	long size=sizeof(SELLER);
+
+	fp = fopen("..\\file\\seller\\seller2.txt","r+");
+    if (fp==NULL){
+        printf("can't open seller2.txt\n");
+        return 2;
+    }
+	while (!feof(fp))
+	{
+		if(fread(&temp,sizeof(SELLER),1,fp)==0)
+		{
+		   printHZ16(200,200,"失败",0,2,2,2);
+		}
+		if(strcmp(temp.account,s->account)==0)
+		{
+			fseek(fp,-size,SEEK_CUR);
+			strcpy(temp.account,newac);
+			strcpy(temp.password,newp);
+			strcpy(temp.phonenum,newpn);
+			fwrite(&temp,sizeof(SELLER),1,fp);
+			flag=1;
+			break;
+		}
+    }   
+    fclose(fp);
+    return flag;
 }

@@ -9,7 +9,7 @@ void lightbutton_sellerpage(int color,int flag);
 void resetbutton_sellerpage(int flag);
 int select_sellerpage();    //选择功能,换页
 int manage_goods(storage *sto); //商品管理
-
+void draw_sellerpage();
 int charge(list *L); //收钱,需要看见订单信息
 int promotion(storage *sto); //促销,在货架中选择
 void list_init(list *L);  //初始化订单

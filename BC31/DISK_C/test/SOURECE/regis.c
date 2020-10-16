@@ -136,21 +136,8 @@ int SellerRegis(SELLER *loginseller)
     int aclen = 0;
     int plen = 0;
     int pnlen = 0;
-      int num[3];  //validity of ac/p/cp
-      	SELLER *new_seller;
-    ratings *r;
-    r->num=0;
-    for(i=0;i<20;i++)
-    {
-        r->score[i]=0;
-    }
-    for(i=0;i<3;i++) 
-    {
-        num[i]=0;
-    }
-    r->average=0;
+    int num[3];  //validity of ac/p/cp
 
-   // draw_regis();
 
     while(1)
     {   
@@ -259,14 +246,13 @@ int SellerRegis(SELLER *loginseller)
                 }
                 if(aclen>=6&&judge_sameAC(AC,1)!=0&&plen>=6&&pnlen==11)
                 {
+                    num[0]=1;
                     num[1]=1;
                     num[2]=1;
-                    num[3]=1;
                 }
-                if(check_register_complete(num,3)==1)
+                if(num[0]&&num[1]&&num[2])
                 {
-                    printf("yes");
-                    if(input_registerinfo(AC,P,PN,r,loginseller)){
+                    if(input_registerinfo(AC,P,PN,loginseller)){
                         printHZ12(820,630,"注册成功",LIGHT_CORAL,2,2,3);
                         delay(3000);
                         return 6;
@@ -278,7 +264,7 @@ int SellerRegis(SELLER *loginseller)
                         return 3;
                     } 
                 }
-                else if(check_register_complete(num,3)==0)
+                else
                 {
                   //  lightbutton_register(730,630,800,660,CRIMSON,4);
                     sign=4;
@@ -377,81 +363,43 @@ void reset_button(int flag)
     }
 }
 
-int check_register_complete(int *nums,int numssize)
-{
-    int i;
-    for(i=0;i<numssize;i++)
-    {
-        if(nums[i]==0) return 0;
-    }
-    return 1;
-}
 
 int judge_sameAC(char *new_ac,int sign)
 {
-    int len,i;
-    FILE *fp;
-    SELLER *s=NULL;
+    FILE *fp=NULL;
+    SELLER temp;
 
-    if(fp=fopen("seller.txt","r+")==NULL)
+    if(fp=fopen("seller2.txt","r")==NULL)
     {
 		printf("cannot open database");
 		delay(1000);
 		exit(1);
 	}
-	fseek(fp, 0, SEEK_END);  
-	len = ftell(fp) / sizeof(SELLER);
-	for (i = 0; i < len; i++)
-	{
-		if ((s = (SELLER*)malloc(sizeof(SELLER))) == NULL)
-		{
-			printf("memory allocation runs wrong in seller_register.c");
-			delay(1000);
-			exit(1);
-		}
-		fseek(fp, i * sizeof(SELLER), SEEK_SET);
-		fread(s, sizeof(SELLER), 1, fp);
-		if (strcmp(s->account_num, new_ac) == 0)
-		{
-			switch (sign)
-			{
-			case 1: 
-				break;
-			case 2:
-				printHZ12(920, 300, "此账号存在",CRIMSON,2,2,3);
-				break;
-			default:
-				printf("something goes wrong");
-				delay(1000);
-				exit(1);
-			}
-			if (s!= NULL)
-			{
-				free(s);
-				s = NULL;
-			}
-			if (fclose(fp) != 0)
-			{
-				printf("\n cannot close Database.");
-				delay(1000);
-				exit(1);
-			}
-			return 0;
-		}
-		free(s);
-		s= NULL;
-	}
-	if (s!= NULL)
-	{
-		free(s);
-		s = NULL;
-	}
 
-	if (fclose(fp) != 0)
+    while(!feof(fp))
+    {
+        fread(&temp,sizeof(SELLER),1,fp);
+        if(strcmp(temp.account,new_ac)==0)
+        {
+            fclose(fp);
+            return 0;
+        }
+    }
+    fclose(fp);
+    return 1;
+}
+
+int input_registerinfo(SELLER *s)
+{
+	FILE* fp;
+	SELLER temp;
+	if ((fp = fopen("..\\file\\seller\\seller2.txt", "a" )) == NULL)
 	{
-		printf("cannot close Database.");
+		printf("cannot open file seller2.txt");
 		delay(1000);
-		exit(1);
+		return 1;
 	}
-	return 1;
+	fwrite(s,sizeof(SELLER),1,fp);
+	fclose(fp);
+	return 0;
 }

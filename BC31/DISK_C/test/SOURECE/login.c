@@ -270,11 +270,6 @@ int SellerLogin(SELLER *s)
 					delay(1000);
 					Bar(620,270,980,300,WHITE);
 					break;
-					case 4:
-					printHZ12(680,270,"打开文件错误",RED,2,2,2);
-					delay(1000);
-					Bar(620,270,980,300,WHITE);
-					break;
 				default:
 					printf("something wrong");
 					delay(1000);
@@ -282,7 +277,7 @@ int SellerLogin(SELLER *s)
 				}
 			}
 		}
-	//	else is_first[4] = 0;
+
 		if(Mouse_press(800,20,870,50))
 		{
 			return 1;
@@ -345,4 +340,39 @@ void resetbutton_login(int flag)
             delay(1000);
             exit(1);
     }
+}
+
+int judge_password(SELLER *s,char *p,char *ac)
+{
+	FILE *fp=NULL;
+	SELLER temp;
+
+	fp=fopen("..\\file\\seller\\seller2.txt","r");
+	if(fp==NULL)
+	{
+		return 3;
+	}
+
+	while(!feof(fp))
+	{
+		fread(&temp,sizeof(SELLER),1,fp);
+		if(strcmp(temp.account,ac)==0)
+		{
+			if(strcmp(temp.password,p)==0)
+			{
+				strcpy(s->account,ac);
+				strcpy(s->password,p);
+				strcpy(s->phonenum,temp.phonenum);
+				fclose(fp);
+				return 2;
+			}
+			else
+			{
+				fclose(fp);
+				return 1;
+			}
+		}
+	}
+	fclose(fp);
+	return 0;
 }

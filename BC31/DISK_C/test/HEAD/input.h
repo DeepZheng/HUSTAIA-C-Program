@@ -1,5 +1,5 @@
-#ifndef_input_h
-#define_input_h
+#ifndef _input_h
+#define _input_h
 
 #include "public.h"
 
@@ -7,6 +7,6 @@ int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int
 
 
 
-int input_registerinfo(SELLER *s);
+
 
 #endif

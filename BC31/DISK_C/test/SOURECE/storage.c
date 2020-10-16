@@ -56,7 +56,7 @@ int shrinkstorage(storage *sto,int pos)
     remove("storage.txt");
     rename("storage2.txt","storage.txt");  //对文件进行操作
 
-    for(i=pos;i<((sto->goods_amount)-1);i++)
+    for(i=pos;i<((sto->)-1);i++)
     {
         sto->G[i]=sto->G[i+1];   //pos后的元素全部整体前移一位
     }
@@ -89,6 +89,6 @@ int adjuststorage(storage *sto,int pos,int new_inventory,float new_price)
             break;
         }
     }
-    
+    fclose(fp);
     return 1;
 }
