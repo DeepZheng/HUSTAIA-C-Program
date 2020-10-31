@@ -109,13 +109,14 @@ int UserRegis (User *loginuser){
 				    delay(1000);
 				    Bar(620,270,980,300,MIMOSA);
                 }
-                if(UserFind(&loginuser,username,usercode)==2){
+                if(UserFind(loginuser,username,usercode)==2){
 					strcpy(loginuser->name,username);
 					strcpy(loginuser->code,usercode);
 					strcpy(loginuser->tel,usertel);
     
-                        printHZ12(680,270,"注册成功",RED,2,2,2);
-				        delay(1000);
+                        Barshadow(400,300,600,400,WHITE,DARK_GRAY);
+	                    printHZ16(410,305,"注册成功",BLACK,2,2,1);
+                        delay(1000);
                         return 31;
 
                 }
@@ -227,7 +228,7 @@ int SellerRegis(SELLER *loginseller)
                 {
                     printHZ12(952,340,"账号不少于六位",CRIMSON,1,1,1);
                 }
-                if (judge_sameAC(AC,1)==0)
+                if (judge_sameAC(AC)==0)
                 {
             
                     printHZ12(952,340,"此账号已被注册",CRIMSON,1,1,1);
@@ -244,7 +245,7 @@ int SellerRegis(SELLER *loginseller)
                     printHZ12(952,580,"电话号码应为十一位",CRIMSON,1,1,1);
                     
                 }
-                if(aclen>=6&&judge_sameAC(AC,1)!=0&&plen>=6&&pnlen==11)
+                if(aclen>=6&&judge_sameAC(AC)!=0&&plen>=6&&pnlen==11)
                 {
                     num[0]=1;
                     num[1]=1;
@@ -364,7 +365,7 @@ void reset_button(int flag)
 }
 
 
-int judge_sameAC(char *new_ac,int sign)
+int judge_sameAC(char *new_ac)
 {
     FILE *fp=NULL;
     SELLER temp;
@@ -389,7 +390,7 @@ int judge_sameAC(char *new_ac,int sign)
     return 1;
 }
 
-int input_registerinfo(SELLER *s)
+int input_registerinfo(char *ac,char *p,char *pn,SELLER *s)
 {
 	FILE* fp;
 	SELLER temp;
@@ -399,7 +400,10 @@ int input_registerinfo(SELLER *s)
 		delay(1000);
 		return 1;
 	}
-	fwrite(s,sizeof(SELLER),1,fp);
+    strcpy(temp.account,ac);
+    strcpy(temp.password,p);
+    strcpy(temp.phonenum,pn);
+	fwrite(&temp,sizeof(SELLER),1,fp);
 	fclose(fp);
 	return 0;
 }

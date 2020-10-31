@@ -8,21 +8,20 @@
 #include <stdlib.h>
 
 
-/*�հ׿��������ַ���ע������ʱ�������ƿ�����Ӱ���ַ���ʾ��ɾ��*/
 int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int dy, int len,char secret)
 {
 
 	int get_char=0,i=0;
 	dy++;
 	dy--;
-	while(bioskey(1))//ɾ��֮ǰ�����Ұ��������ַ�
+	while(bioskey(1))
 	{
 		getch();
 	}
 	
 	while(1)
 	{
-		if(Mouse_pressother(xmin,ymin,xmax,ymax)!=1)//���û�е����������
+		if(Mouse_pressother(xmin,ymin,xmax,ymax)!=1)
 		{
 			while(1)
 			{
@@ -39,26 +38,24 @@ int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int
 				{
 					get_char=bioskey(0);
 					
-					if(get_char==0x0e08&&n>0)//�����˸��Ҵ����ַ�
+					if(get_char==0x0e08&&n>0)
 					{
-						for(i=xmin+n*8*dx;i>=xmin+(n-1)*8*dx;i--)//�˸񸲸ǣ�8*dx��hanzi.h����������������
+						for(i=xmin+n*8*dx;i>=xmin+(n-1)*8*dx;i--)
 						{
 							Liney(i,ymin,i,ymax,color);
 						}
 						n=n-1;
 					}
 					else
-						if(get_char==0x1c0d)//�س��˳�����
+						if(get_char==0x1c0d)
 							return n;
-						else 	if(n>=len)//�������С����ÿ���������len���ַ�
+						else 	if(n>=len)
 						{
 							return n;
 						}
 					
-						else//�˴���ȱδ���������ַ��ж�,δ���ӳ���xmax�ж�
+						else
 						{
-							//put_asc(300+n*8,300+n*10,"A",0,10,10);//����
-							//n++;//����
 							switch(get_char)
 							{
 								case 0x0231://�����̼�ֵ
@@ -209,7 +206,7 @@ int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int
 								put_asc(xmin+n*8*dx,ymin,"-",0,dx,dx);
 								s[n] = '-';
 									break;
-								case 0x4f31://��е�����ұ�С����
+								case 0x4f31:
 								put_asc(xmin+n*8*dx,ymin,"1",0,dx,dx);
 								s[n] = '1';
 									break;
@@ -258,15 +255,15 @@ int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int
 									break;
 						
 							}
-						if(secret==1&&get_char!=0x0e08)//����
+						if(secret==1&&get_char!=0x0e08)
 						{
-							for(i=xmin+(n+1)*8*dx;i>=xmin+n*8*dx;i--)//�˸񸲸ǣ�8*dx��hanzi.h����������������
+							for(i=xmin+(n+1)*8*dx;i>=xmin+n*8*dx;i--)
 							{
 								Liney(i,ymin,i,ymax,color);
 							}
 							put_asc(xmin+n*8*dx,ymin,"*",0,dx,dx);
 						}
-						n++;//�ַ���+1
+						n++;
                           
 						}
 					if(Mouse_pressother(xmin,ymin,xmax,ymax)==1)
@@ -277,7 +274,7 @@ int Input(int xmin,int ymin,int xmax,int ymax,int n,char *s,int color,int dx,int
 			}
 		}
 		else
-			return n;//�����ַ���
+			return n;
 	}
 	
 }

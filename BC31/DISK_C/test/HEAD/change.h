@@ -6,7 +6,7 @@
 
 int changeinfo(SELLER *s);
 
-void draw_changeinfo();
+void draw_changeinfo(void);
 
 int input_changeinfo(SELLER *s,char *newac,char *newp,char *newpn);
 #endif

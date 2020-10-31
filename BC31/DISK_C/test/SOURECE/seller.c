@@ -3,36 +3,16 @@
 #include "draw.h"
 #include "tstruct.h"
 #include "file.h"
-#include "list.h"
+#include "showlist.h"
 
-int sellerpage(SELLER *s)
+int sellerpage(SELLER *s,list *L)
 {
     int flag=1;
+	int recommendation_size=0;
    
-    list goodlist;
     storage sto;
-    char str[5]; //用来显示商家评分
-    
-	if(update_storage(&sto))
-	{
-		printHZ16(400,70,"货架已更新",MIMOSA,2,2,2);
-	}
-	else
-	{
-		printHZ16(400,70,"货架更新失败",MIMOSA,2,2,2);
-	}
-	
-	if(update_list(&goodlist))
-	{
-		printHZ16(400,170,"订单已更新",MIMOSA,2,2,2);
-	}
-	else
-	{
-		printHZ16(400,170,"订单更新失败",MIMOSA,2,2,2);
-	}
-	
-	sprintf(str,"%.2f",s->rat.average);
-    
+	recommends selections;
+
     while (1)
     {   
         Newxy();
@@ -40,26 +20,36 @@ int sellerpage(SELLER *s)
         {
 			case 1:
 			draw_sellerpage();
-			put_asc(430,675,str,VIOLET,1,1);
+			Initmouse(1,1023,1,767);
+			update_storage(&sto);
+			update_list(L);
+			recommendation_size=update_recommends(&selections);
+			put_asc(100,440,s->account,BLACK,2,2);
+			put_asc(100,560,s->phonenum,BLACK,2,2);
 			flag=select_sellerpage();
 			break;
 			case 2:
+			delay(600);
 		    flag=manage_goods(&sto);
 			break;
 			case 3:
-		  // 	flag=promotion(&sto);
+			delay(600);
+			flag=promotion(&selections,recommendation_size);
 			break;
 			case 4:
-		    flag=watch_listinfo(&goodlist);
+			delay(600);
+		    flag=watch_listinfo(L);
 			break;
 			case 5:
-		    flag=charge(&goodlist);
+			delay(600);
+		    flag=charge(L);
 			break;
 			case 6:
-		   flag=changeinfo(s);
+			delay(600);
+		   	flag=changeinfo(s);
 			break;
 			case 7:
-			return 2;   //点击退出商家端,回到登录界面
+			return -1;   
 			default:
 			printf("something wrong");
 			delay(1000);
@@ -80,25 +70,28 @@ void  storage_init(storage *sto)
 	for(i=0;i<16;i++)
 	{
 	   strcpy(sto->G[i].picpath,init);
-        sto->G[i].price=0;
-        sto->G[i].inventory=0;
-		sto->G[i].c='\n';
+		strcpy(sto->G[i].inventory,"0");
+		strcpy(sto->G[i].price,"0");
 	}
+	return;
 }
 
-void list_init(list *L)
+void list_init(list *L) //所有订单相关函数准备修改
 {	
 	int i=0;
 	int j=0;
-	char init[3]='\0';
-	L->list_state=UNFINISHED;
-	L->pos=0;
+	char init[3]="\0";
+	strcpy(L->name,init);
+
+	L->list_state='0';
+	L->pos='0';
+	L->top='0';
+	
 	for(i=0;i<10;i++)
 	{
 	  	strcpy(L->G[i].picpath,init);
-        L->G[i].price=0;
-        L->G[i].inventory=0;
-		L->G[i].c='\n';
+		strcpy(L->G[i].inventory,"0");
+		strcpy(L->G[i].price,"0");
 	}
 	return;
 }
@@ -118,23 +111,20 @@ int update_list(list *L)
 
 	while (!feof(fp))
 	{
-		fread(&temp,sizeof(list),1,fp);
-		if(temp.list_state==FINISHED)
+		if(fread(&temp,sizeof(list),1,fp)==0)
+			break;
+		if(temp.list_state=='2')
 		{
 			continue;              //订单已被处理,跳过
 		}
 		else
 		{
-			L->list_state=temp.list_state;            //找到未被处理过的订单
-			L->pos=temp.pos;
-			for(i=0;i<10;i++)
-			{
-				L->G[i]=temp.G[i];
-			}
+			ListCopy(L,&temp);
 			fclose(fp);
 			return 1;
 		}
 	}
+	return 1;
 }
 
 int update_storage(storage *sto)
@@ -149,200 +139,79 @@ int update_storage(storage *sto)
 		return 0;
 	}
 	while (!feof(fp))
-	{
-		fread(&temp,sizeof(good),1,fp);
-		sto[sto->goods_amount]=temp;
+	{	
+		if(fread(&temp,sizeof(good),1,fp)==0)
+			break;
+		GoodCopy(&(sto->G[sto->goods_amount]),&temp);
 		(sto->goods_amount)++;
 	}
 	fclose(fp);
 	return 1;
 }
 
+int update_recommends(recommends *selections)
+{
+    FILE *fp=NULL;
+    good temp;
+    int count=0;
+
+    fp=fopen("..\\file\\storage\\reco.txt","r");
+    if(fp==NULL)
+    {
+        return -1;
+    }
+    while(!feof(fp))
+    {
+        if(fread(&temp,sizeof(good),1,fp)==0)
+			break;
+        GoodCopy(&(selections->re[count]),&temp);
+        count++;
+    }
+    fclose(fp);
+    return count;
+}
+
 int select_sellerpage()
 {
-	 int light_sign=0;    //判断是否被标亮
-
-
 	while (1)
 	{
 		Newxy();
-		if(Mouse_above(630,50,800,250))
+		if(Mouse_press(630,50,800,250)==1)
 		{
-			if(Mouse_press(630,50,800,250)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(VIOLET,1);
-					//light_sign=1;
-					continue;
-				}
-			}
-			else if(Mouse_press(630,50,800,250)==1)
-				return 2;
+			return 2;
 		}
-		if(Mouse_above(820,50,990,250))
+		if(Mouse_press(820,50,990,250)==1)
 		{
-			if(Mouse_press(820,50,990,250)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(VIOLET,2);
-					//light_sign=2;
-					continue;
-				}
-			}
-			else if(Mouse_press(820,50,990,250)==1)
-				return 3;
+			return 3;
 		}
-		if(Mouse_above(630,300,800,500))
+		if(Mouse_press(630,300,800,500)==1)
 		{
-			if(Mouse_press(630,300,800,500)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(VIOLET,3);
-					//light_sign=3;
-					continue;
-				}
-			}
-			else if(Mouse_press(630,300,800,500)==1)
-				return 4;
+			return 4;
 		}
-		if(Mouse_above(820,300,990,500))
+		if(Mouse_press(820,300,990,500)==1)
 		{
-			if(Mouse_press(820,300,990,500)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(VIOLET,4);
-					//light_sign=4;
-					continue;
-				}
-			}
-			else if(Mouse_press(820,300,990,500)==1)
 			return 5;
 		}
-		if(Mouse_above(850,550,950,700))
+		if(Mouse_press(850,550,950,700)==1)
 		{
-			if(Mouse_press(850,550,950,700)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(ORANGE,5);
-					//light_sign=5;
-					continue;
-				}
-			}
-			else if(Mouse_press(850,550,950,700)==1)
-				return 6;
+			return 6;
 		}
-		if(Mouse_above(630,550,820,700))
+		if(Mouse_press(630,550,820,700)==1)
 		{
-			if(Mouse_press(630,550,820,700)==0)
-			{
-				if(light_sign==0)
-				{
-					//lightbutton_sellerpage(ORANGE,6);
-					//light_sign=6;
-					continue;
-				}
-			}
-			else if(Mouse_press(630,550,820,700)==1)
-				return 7;
+			return 7;
 		}
-
-	//if(light_sign!=0)
-	//{
-	//	resetbutton_sellerpage(light_sign);
-	//	light_sign=0;
-	  //	continue;
-	//}
-	}
-}
-
-void lightbutton_sellerpage(int color,int flag)
-{
-	switch (flag)
-	{
-		case 1:
-		Bar(630,50,800,250,color);
-		printHZ16(640,70,"商品",BLACK,4,4,10);
-		printHZ16(660,180,"管理",BLACK,4,4,7);
-		break;
-		case 2:
-		Bar(820,50,990,250,color);
-		printHZ16(830,70,"促销",BLACK,4,4,10);
-		printHZ16(830,180,"商品",BLACK,4,4,10);
-		break;
-		case 3:
-		Bar(630,300,800,500,color);
-		printHZ16(640,320,"查看订单",BLACK,2,2,7);
-		printHZ16(680,430,"信息",BLACK,2,2,7);
-		break;
-		case 4:
-		Bar(820,300,990,500,color);
-		printHZ16(830,370,"收钱",BLACK,4,4,10);
-		break;
-		case 5:
-		Bar(850,550,950,700,color);
-		printHZ16(860,570,"修改个人信息",BLACK,1,1,1);
-		break;
-		case 6:
-		Bar(630,550,820,700,color);
-		printHZ16(630,570,"退出商家端",BLACK,1,1,1);
-		break;
-		default:
-		printf("something wrong");
-		exit(1);
-		break;
-	}
-}
-
-void resetbutton_sellerpage(int flag)
-{
-	switch (flag)
-	{
-		case 1:
-		Bar(630,50,800,250,CORAL);
-		printHZ16(640,70,"商品",BLACK,4,4,10);
-		printHZ16(660,180,"管理",BLACK,4,4,7);
-		break;
-		case 2:
-		Bar(820,50,990,250,CORAL);
-		printHZ16(830,70,"促销",BLACK,4,4,10);
-		printHZ16(830,180,"商品",BLACK,4,4,10);
-		break;
-		case 3:
-		Bar(630,300,800,500,CORAL);
-		printHZ16(640,320,"查看订单",BLACK,2,2,7);
-		printHZ16(680,430,"信息",BLACK,2,2,7);
-		break;
-		case 4:
-		Bar(820,300,990,500,CORAL);
-		printHZ16(830,70,"收钱",BLACK,4,4,10);
-		break;
-		case 5:
-		Bar(850,550,950,700,GOLDEN);
-		printHZ16(860,570,"修改个人信息",BLACK,1,1,1);
-		break;
-		case 6:
-		Bar(630,550,820,700,GOLDEN);
-		printHZ16(630,570,"退出商家端",BLACK,1,1,1);
-		break;
-		default:
-		printf("something wrong");
-		exit(1);
-		break;
 	}
 }
 
 void draw_sellerpage()
 {   
 	Bar(1,1,1023,767,LIGHT_SEA_GREEN);
-	Putbmp64k(50,350,"..\\file\\bmp\\userinfo.bmp");
-    printHZ16(200,200,"帅团",AZURE,3,3,6);
-    printHZ16(300,250,"商家端",AZURE,2,2,2);
+    printHZ16(100,50,"帅团",GOLDEN,3,3,6);
+    printHZ16(300,80,"商家端",GOLDEN,2,2,2);
 
+	Bar(50,350,450,600,PEACH);
+	printHZ16(70,380,"商家账号",BLUE_VIOLET,2,2,1);
+	printHZ16(70,500,"联系方式",BLUE_VIOLET,2,2,1);
     LineThickSha(40,60,50,70,43,25,60,1);
 	LineThickSha(50,70,80,100,43,25,25,1);
 	LineThickSha(110,100,120,110,43,25,80,1);
@@ -365,7 +234,8 @@ void draw_sellerpage()
     printHZ16(830,180,"商品",BLACK,4,4,10);
     printHZ16(640,320,"查看订单",BLACK,2,2,7);
     printHZ16(680,430,"信息",BLACK,2,2,7);
-    printHZ16(830,370,"收钱",BLACK,4,4,10);
+    printHZ16(830,330,"收钱",BLACK,4,4,10);
+	printHZ16(830,420,"及发货",BLACK,3,3,2);
     printHZ16(860,570,"修改个人信息",BLACK,1,1,1);
-    printHZ16(660,630,"退出商家端",BLACK,1,1,1);
+    printHZ16(660,630,"退出程序",BLACK,2,2,1);
 }

@@ -6,28 +6,22 @@
 #ifndef _TSTRUCT_H_
 #define _TSTRUCT_H_
 
+#include <time.h>
 #define FOOD 1  //食物
 #define FURNITURE 2  //家居
 #define ELECTRIC_DEVICE 3  //电器
 #define BOOK 4 //图书
-#define FRESH 5 //生鲜
-//#define UNFINISHED 0
-//#define FINISHED 1
+
 
 typedef struct User{
     char name[10];  //用户账号
     char code[15];  //用户密码
     char tel[12];	//用户电话号码
 	char pos;   //用户定位，暂时只有武汉
-	int ordernum;	//订单数量
+	char ordernum;	//订单数量
     char t;        //换行符
 } User;
 
-/*typedef struct ratings{
-	int num; //how many ratings have been submitted
-	float score[20];
-	float average; //final rating
-}ratings;  */
 typedef struct SELLER{
 	char phonenum[12];
 	char account[21];
@@ -38,9 +32,10 @@ typedef struct SELLER{
 typedef struct good{
 //	char name[16];
 	char inventory[5]; //某种商品的库存量,即允许的最大销量
-	char price[5]; //可以在促销期间降低
-	char picpath[3]; //商品图片路径 前两位表示商品分类 第四位开始为商品名称 前三位+.bmp为商品图片路径
-//	ratings rat;
+	char price[7]; //可以在促销期间降低
+	char picpath[4]; //商品图片路径 前两位表示商品分类 第四位开始为商品名称 前三位+.bmp为商品图片路径
+	char t;
+	//	ratings rat;
 }good;
 
 typedef struct{
@@ -71,9 +66,11 @@ typedef struct {
 
 typedef struct list{
 	char name[15];	//订单用户
-	int list_state; //订单状态,0为未处理,1为已处理
+	char list_state; //订单状态,0为未处理,1为已处理,2为已收货
 	char pos; //订单发货地址
+	char top;	//订单中商品数量
 	good G[10];  //最多允许在一个订单中订购10种商品
+	char t;		//换行符
 }list;
 
 typedef struct storage{

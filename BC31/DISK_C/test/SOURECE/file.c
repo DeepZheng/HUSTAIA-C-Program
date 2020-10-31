@@ -14,6 +14,7 @@
 #include "TSTRUCT.H"
 #include "mouse.h"
 #include "color.h"
+#include "time.h"
 
 /*
 Function : 用户初始化
@@ -122,7 +123,7 @@ void UserCopy(User *loginuser, User *copy)
 	strcpy(loginuser->code, copy->code);
 	strcpy(loginuser->tel, copy->tel);
 	loginuser->pos = copy->pos;
-	loginuser->ordernum = copy->ordernum;
+   //	loginuser->ordernum = copy->ordernum;
 	loginuser->t = copy->t;
 }
 
@@ -195,78 +196,82 @@ int UserUpdate(User *loginuser, int mode, char *tar)
 
 
 void InitCart(Cart *usercart){
-	usercart->top=0;
+	usercart->top = 0;
+	usercart->price = 0.0;
 }
 /*
 Function : 将用户选择的商品添加入购物车
 Return :
 */
-void AddGood(good g,Cart *usercart){
-	usercart->cartgood[usercart->top++] = g;
+int AddGood(good g,Cart *usercart){
+	//usercart->cartgood[usercart->top] = g;
+	GoodCopy(&usercart->cartgood[usercart->top],&g);
+	usercart->top++;
 	usercart->price += atof(g.price);
+	return 1;
 }
 
 
 
 void Initgood(eats *eat,electrics *electric,books *book,furnitures *furniture,recommends *recommend){
-	FILE *fp;
+	FILE *fp1,*fp2,*fp3,*fp4,*fp5,*fp6;
 	int i = 0;
 	
 	//读入食品信息
-	fp = fopen("..\\file\\storage\\eat.txt","r");
-	if(fp=NULL){
+	fp1 = fopen("..\\file\\storage\\eat.txt","r");
+	if(fp1==NULL){
 		printf("can't open eat.txt");
 	}
-	while(!feof(fp)){
-		if(fscanf(fp,"%s=%s=%s\n",eat->ea[i].picpath,eat->ea[i].price,eat->ea[i].inventory)==0)
+	while(!feof(fp1)){
+		if(fread(&eat->ea[i++],sizeof(good),1,fp1)==0)	
 			break;
-		else i++;
 	}
+	fclose(fp1);
 	i=0;
 	//读入图书信息
-	fp = fopen("..\\file\\storage\\book.txt","r");
-	if(fp=NULL){
+	fp2 = fopen("..\\file\\storage\\book.txt","r");
+	if(fp2==NULL){
 		printf("can't open book.txt");
 	}
-	while(!feof(fp)){
-		if(fscanf(fp,"%s=%s=%s\n",book->bo[i].picpath,book->bo[i].price,book->bo[i].inventory)==0)
+	while(!feof(fp2)){
+		if(fread(&book->bo[i++],sizeof(good),1,fp2)==0)
 			break;
-	else i++;
 	}
+	fclose(fp2);
 	i=0;
 	//读入家居信息
-	fp = fopen("..\\file\\storage\\furniture.txt","r");
-	if(fp=NULL){
+	fp3 = fopen("..\\file\\storage\\furni.txt","r");
+	if(fp3==NULL){
 		printf("can't open furniture.txt");
 	}
-	while(!feof(fp)){
-		if(fscanf(fp,"%s=%s=%s\n",furniture->fu[i].picpath,furniture->fu[i].price,furniture->fu[i].inventory)==0)
-			break;
-		else i++;
+	while(!feof(fp3)){
+		if(fread(&furniture->fu[i++],sizeof(good),1,fp3)==0)
+			break;	
 	}
+	fclose(fp3);
 	i=0;
 	//读入电器信息
-	fp = fopen("..\\file\\storage\\electric.txt","r");
-	if(fp=NULL){
+	fp4 = fopen("..\\file\\storage\\electric.txt","r");
+	if(fp4==NULL){
 		printf("can't open electric.txt");
 	}
-	while(!feof(fp)){
-		if(fscanf(fp,"%s=%s=%s\n",electric->el[i].picpath,electric->el[i].price,electric->el[i].inventory)==0)
+	while(!feof(fp4)){
+		if(fread(&electric->el[i++],sizeof(good),1,fp4)==0)
 			break;
-		else i++;
 	}
+	fclose(fp4);
 	i=0;
 	//读入推荐信息
-	fp = fopen("..\\file\\storage\\recommend.txt","r");
-	if(fp=NULL){
+	fp5 = fopen("..\\file\\storage\\recom.txt","r");
+	if(fp5==NULL){
 		printf("can't open recommend.txt");
 	}
-	while(!feof(fp)){
-		if(fscanf(fp,"%s=%s=%s\n",recommend->re[i].picpath,recommend->re[i].price,recommend->re[i].inventory)==0)
+	while(!feof(fp5)){
+		if(fread(&recommend->re[i++],sizeof(good),1,fp5)==0)	
 			break;
-		else i++;
 	}
-	i=0;
+	fclose(fp5);
+	return ;
 }
 
 /*
@@ -277,18 +282,112 @@ int AddList(Cart *usercart,User *loginuser){
 	int i;
 	FILE *fp;
 	list newlist;
-	newlist.list_state = 0;	//未发货
+	//时间
+ //	time_t rawtime;
+
+  //	time ( &rawtime );
+  //	newlist.ordertime = rawtime;
+	newlist.list_state = '0';	//未发货
+	newlist.t = '\n';//换行
+	newlist.pos = loginuser->pos;
+	newlist.top = usercart->top+'0';	//商品数量
 	strcpy(newlist.name,loginuser->name);	// 下订单的用户名
+	//Put_Asc16_Size(150,200,2,2,usercart->top+'0',0);
+	//Put_Asc16_Size(150,200+100,2,2,newlist.top,0);
+	//delay(600);
 	fp = fopen ("..\\file\\list\\list.txt","a+");
-	for (i =0 ;i <usercart->top;i++){
-		newlist.G[i] = usercart->cartgood;
+   	for (i =0 ;i <usercart->top;i++){
+		//newlist.G[i] = usercart->cartgood;
+		GoodCopy(&newlist.G[i],&usercart->cartgood[i]);
 	}
-	fwrite(newlist,sizeof(list),1,fp);
+	fwrite(&newlist,sizeof(list),1,fp);
 	fclose(fp);
 	return 1;
 }
 
+void ReadList(User *loginuser,list *userlist){
+	int i = 0;
+	FILE *fp;
+	list copy;
+	fp = fopen("..\\file\\list\\list.txt","r+");
+	if(fp == NULL){
+		printf("open error");
+		exit(1);
+	}
+	while(!feof(fp)){
+		if(!fread(&copy,sizeof(list),1,fp)){
+			break;
+		}
+		//put_asc(300,300,copy.name,0,1,1);
+		if(!strcmp(copy.name,loginuser->name)){		//找到相应用户的商品			
+			ListCopy(&userlist[i++],&copy);
+			//printHZ16(200,100+10*i,"成功",0,1,1,1);
+			//Put_Asc16_Size(150,200+100*i,2,2,userlist[i-1].top,0);
+			//delay(600);
+			//put_asc(300,300,userlist->G[0].picpath,0,1,1);
+			loginuser->ordernum++;
+		}
+	}
+	fclose(fp);
+}
+//刷新订单
+void RenewList(list *L,int cnt)
+{
+    FILE *fp1=NULL;
+    FILE *fp2=NULL;
+    list temp;
+    int i=0;
+
+    fp1=fopen("..\\file\\list\\list.txt","r");
+    fp2=fopen("..\\file\\list\\list2.txt","a");
+
+    if(fp1==NULL||fp2==NULL)
+    {
+        return 0;
+    }
+    while(!feof(fp1))
+    {
+        if(fread(&temp,sizeof(list),1,fp1)==0)
+            break;
+        if(strcmp(L->name,temp.name)==0&&cnt==i&&temp.list_state=='1')
+        {
+            temp.list_state='2';
+            fwrite(&temp,sizeof(list),1,fp2);
+        }
+        else
+        {   
+			i++;
+            fwrite(&temp,sizeof(list),1,fp2);
+        }
+    }
+    fclose(fp1);
+    fclose(fp2);
+    remove("..\\file\\list\\list.txt");
+    rename("..\\file\\list\\list2.txt","..\\file\\list\\list.txt");
+    return 1;
+}
+
+void ListCopy(list *dest,list *src){
+	int i;
+	strcpy(dest->name,src->name);
+	dest->list_state = src->list_state;
+	dest->pos = src->pos;
+	dest->top = src->top;
+	dest->t = src->t;
+	for(i = 0;i<src->top;i++){
+		GoodCopy(&dest->G[i],&src->G[i]);
+	}
+	//订单时间
+}
+/*
 int FindList(User *loginuser){
 	FILE *fp;
 	
+}
+*/
+void GoodCopy(good *dest,good *src){
+	strcpy(dest->inventory,src->inventory);
+	strcpy(dest->price , src->price);
+	strcpy(dest->picpath,src->picpath);
+	dest->t = src->t;
 }

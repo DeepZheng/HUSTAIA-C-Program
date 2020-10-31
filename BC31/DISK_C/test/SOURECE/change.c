@@ -20,6 +20,8 @@ int changeinfo(SELLER *s)
     strcpy(Newp,s->password);
     strcpy(NewPN,s->phonenum);
     draw_changeinfo();
+    Initmouse(1,1023,1,767);
+ //   put_asc(50,550,s->account,RED,2,2);
 
     while(1)
     {
@@ -113,15 +115,6 @@ int changeinfo(SELLER *s)
                     printHZ16(20,600,"文件打开失败",RED,2,2,2);
                     delay(1000);
                 }
-                 else if(input_changeinfo(s,NewAC,Newp,NewPN)==3)
-                {
-                    printHZ16(20,600,"信息写入失败",RED,2,2,2);
-                }
-                 else if(input_changeinfo(s,NewAC,Newp,NewPN)==4)
-                {
-                    printHZ16(20,600,"文件关闭失败",RED,2,2,2);
-                    delay(1000);
-                }
             }
         }
         if(Mouse_press(700,600,900,700)) //点击返回按钮,返回商家主界面
@@ -160,32 +153,38 @@ void draw_changeinfo()
 int input_changeinfo(SELLER *s,char *newac,char *newp,char *newpn)
 {
 	int flag=0;
-	FILE *fp=NULL;
+	FILE *fp1=NULL,*fp2=NULL;
 	SELLER temp;
 	long size=sizeof(SELLER);
 
-	fp = fopen("..\\file\\seller\\seller2.txt","r+");
-    if (fp==NULL){
-        printf("can't open seller2.txt\n");
+	fp1 = fopen("..\\file\\seller\\seller2.txt","r");
+    fp2= fopen("..\\file\\seller\\temp.txt","a");
+    if (fp1==NULL||fp2==NULL)
+    {
         return 2;
     }
-	while (!feof(fp))
+    
+	while (!feof(fp1))
 	{
-		if(fread(&temp,sizeof(SELLER),1,fp)==0)
-		{
-		   printHZ16(200,200,"失败",0,2,2,2);
-		}
+		if(fread(&temp,sizeof(SELLER),1,fp1)==0)
+            break;
 		if(strcmp(temp.account,s->account)==0)
 		{
-			fseek(fp,-size,SEEK_CUR);
 			strcpy(temp.account,newac);
 			strcpy(temp.password,newp);
 			strcpy(temp.phonenum,newpn);
-			fwrite(&temp,sizeof(SELLER),1,fp);
+			fwrite(&temp,sizeof(SELLER),1,fp2);
 			flag=1;
 			break;
 		}
+        else
+        {
+            fwrite(&temp,sizeof(SELLER),1,fp2);
+        }
     }   
-    fclose(fp);
+    fclose(fp1);
+    fclose(fp2);
+    remove("..\\file\\seller\\seller2.txt");
+    rename("..\\file\\seller\\temp.txt","..\\file\\seller\\seller2.txt");
     return flag;
 }

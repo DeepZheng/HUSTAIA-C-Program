@@ -94,6 +94,9 @@ int UserLogin(User *loginuser){
 
 					case 0 :     //匹配成功
 						{
+							Barshadow(400,300,600,400,WHITE,DARK_GRAY);
+							printHZ16(410,305,"登录成功",BLACK,2,2,1);
+							delay(1000);
 							return 4;//进入主页面
 						}
 					case 1 ://密码错误

@@ -3,6 +3,9 @@
 
 #include "tstruct.h"
 
-int promotion(storage *sto);
+int promotion(recommends *selections,int size);
+int input_recommendinfo(recommends *recommend,int pos);
+void display_recommends(recommends *recommend,int recommend_size);
+
 
 #endif

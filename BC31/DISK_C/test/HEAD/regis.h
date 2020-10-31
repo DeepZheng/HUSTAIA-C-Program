@@ -7,5 +7,5 @@ int SellerRegis(SELLER *loginseller);
 void lightbutton_register(int x1,int x2,int y1,int y2,int color,int flag);
 void reset_button(int flag);
 int judge_sameAC(char *new_ac);
-int input_registerinfo(SELLER *s);
+int input_registerinfo(char *ac,char *p,char *pn,SELLER *s);
 #endif
